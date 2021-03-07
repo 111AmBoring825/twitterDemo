@@ -1,11 +1,3 @@
-//
-//  HomeTableViewController.swift
-//  Twitter
-//
-//  Created by lxy on 2/28/21.
-//  Copyright © 2021 Dan. All rights reserved.
-//
-
 import UIKit
 
 class HomeTableViewController: UITableViewController {
@@ -32,7 +24,7 @@ class HomeTableViewController: UITableViewController {
     func loadMoreTweets(){
         numberOfTweet=numberOfTweet+20
         let para=["count":numberOfTweet]
-        TwitterAPICaller.client?.getDictionariesRequest(url: loadurl, parameters: para, success: { (tweets:[NSDictionary]) in
+        TwitterAPICaller.client?.getDictionariesRequest(url: loadurl, parameters: para as [String : Any], success: { (tweets:[NSDictionary]) in
             self.tweetArray.removeAll()
             for tweet in tweets{
                 self.tweetArray.append(tweet)
@@ -58,22 +50,34 @@ class HomeTableViewController: UITableViewController {
         let imgUrl=URL(string: (user["profile_image_url_https"]as? String)!)
         let data=try? Data(contentsOf: imgUrl!)
         if let imgData=data{cell.profileImageView.image=UIImage(data: imgData)}
+        
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"]as! Bool)
+        
         cell.tweetContent.text=tweetArray[indexPath.row]["text"] as? String
         cell.userNameLabel.text = user["name"] as? String
+        
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId=tweetArray[indexPath.row]["id"] as! Int
+        cell.setRetweeted(tweetArray[indexPath.row]["retweeted"] as! Bool)
+        
         return cell
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTweets()
         //set up refresh contol
         myRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         tableView.refreshControl=myRefreshControl
+        self.tableView.rowHeight=UITableView.automaticDimension
+        self.tableView.estimatedRowHeight=150
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweets()
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -92,9 +96,7 @@ class HomeTableViewController: UITableViewController {
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
         // Configure the cell...
-
         return cell
     }
     */
@@ -115,14 +117,13 @@ class HomeTableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     */
 
     /*
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
     }
     */
 
@@ -136,7 +137,6 @@ class HomeTableViewController: UITableViewController {
 
     /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
