@@ -86,7 +86,7 @@
                                             </constraints>
                                             <state key="normal" image="favor-icon"/>
                                             <connections>
-                                                <action selector="favorateTweet:" destination="IPG-9X-Q3s" eventType="touchUpInside" id="Seh-Yx-0qd"/>
+                                                <action selector="favoriteTweet:" destination="IPG-9X-Q3s" eventType="touchUpInside" id="LNK-LW-hPy"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVq-Tg-OJu" userLabel="retwetButton">
